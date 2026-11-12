@@ -1,0 +1,3646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heinbobo's NS Countdown</title>
+  <style>
+    :root{
+      --bg1:#f4f7f1;
+      --bg2:#e6ede0;
+      --card:#ffffffcc;
+      --olive:#6f7f5a;
+      --olive-dark:#4f5d42;
+      --sage:#a8b89c;
+      --sage-light:#dbe5d2;
+      --text:#2f382a;
+      --muted:#6d7567;
+      --accent:#8a9c78;
+      --gold:#cdbb8a;
+      --danger:#b16464;
+      --shadow: 0 12px 30px rgba(54, 66, 45, 0.12);
+      --radius: 22px;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      font-family: "Inter", "Segoe UI", Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, #f8fbf5 0%, transparent 28%),
+        radial-gradient(circle at top right, #edf3e7 0%, transparent 30%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+    }
+
+    .container{
+      width:min(1100px, 92vw);
+      margin:0 auto;
+      padding:24px 0 48px;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap:20px;
+      align-items:stretch;
+      margin-top:10px;
+    }
+
+    .card{
+      background:var(--card);
+      backdrop-filter: blur(8px);
+      border:1px solid rgba(255,255,255,0.5);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    .hero-main{
+      padding:28px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-main::after{
+      content:"";
+      position:absolute;
+      right:-20px;
+      top:-20px;
+      width:180px;
+      height:180px;
+      background: radial-gradient(circle, rgba(168,184,156,0.28), transparent 70%);
+      border-radius:50%;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--sage-light);
+      color:var(--olive-dark);
+      font-size:0.9rem;
+      font-weight:700;
+      letter-spacing:0.2px;
+    }
+
+    h1{
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height:1.05;
+      margin:16px 0 10px;
+    }
+
+    .subtitle{
+      color:var(--muted);
+      font-size:1.02rem;
+      line-height:1.65;
+      margin-bottom:18px;
+      max-width:64ch;
+    }
+
+    .mini-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:18px 0 0;
+    }
+
+    .pill{
+      background:#fff;
+      border:1px solid #edf1e8;
+      color:var(--olive-dark);
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:0.95rem;
+      font-weight:600;
+    }
+
+    .hero-side{
+      padding:22px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:16px;
+    }
+
+    .mascot-wrap{
+      display:flex;
+      justify-content:center;
+      align-items:flex-end;
+      gap:18px;
+      min-height:230px;
+      padding:10px;
+    }
+
+    .mascot{
+      width:140px;
+      height:170px;
+      position:relative;
+      animation: floaty 3.4s ease-in-out infinite;
+    }
+
+    .mascot:nth-child(2){
+      animation-delay:0.4s;
+    }
+
+    @keyframes floaty{
+      0%,100%{ transform:translateY(0px);}
+      50%{ transform:translateY(-8px);}
+    }
+
+    .ear{
+      position:absolute;
+      width:34px;
+      height:70px;
+      background:#f9faf7;
+      border:3px solid var(--olive-dark);
+      border-radius:20px;
+      top:0;
+    }
+
+    .ear.left{ left:18px; transform:rotate(-10deg); }
+    .ear.right{ right:18px; transform:rotate(10deg); }
+
+    .bear-ear{
+      position:absolute;
+      width:34px;
+      height:34px;
+      background:#e9dfcf;
+      border:3px solid var(--olive-dark);
+      border-radius:50%;
+      top:8px;
+    }
+
+    .bear-ear.left{ left:18px; }
+    .bear-ear.right{ right:18px; }
+
+    .head{
+      position:absolute;
+      width:110px;
+      height:95px;
+      background:#f9faf7;
+      border:3px solid var(--olive-dark);
+      border-radius:45% 45% 42% 42%;
+      top:34px;
+      left:15px;
+      z-index:2;
+    }
+
+    .head.bear{
+      background:#e9dfcf;
+      border-radius:42%;
+      top:28px;
+    }
+
+    .beret{
+      position:absolute;
+      width:82px;
+      height:32px;
+      background:var(--olive);
+      border:3px solid var(--olive-dark);
+      border-radius:24px;
+      top:28px;
+      left:18px;
+      transform:rotate(-12deg);
+      z-index:3;
+    }
+
+    .beret::after{
+      content:"★";
+      position:absolute;
+      right:8px;
+      top:2px;
+      color:var(--gold);
+      font-size:18px;
+    }
+
+    .face{
+      position:absolute;
+      inset:0;
+    }
+
+    .eye{
+      position:absolute;
+      width:8px;
+      height:12px;
+      background:var(--olive-dark);
+      border-radius:50%;
+      top:40px;
+    }
+
+    .eye.left{ left:34px; }
+    .eye.right{ right:34px; }
+
+    .blush{
+      position:absolute;
+      width:14px;
+      height:8px;
+      background:#e6c8c8;
+      opacity:0.65;
+      border-radius:999px;
+      top:52px;
+    }
+
+    .blush.left{ left:22px; }
+    .blush.right{ right:22px; }
+
+    .mouth{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      top:56px;
+      font-size:16px;
+      color:var(--olive-dark);
+      font-weight:800;
+    }
+
+    .body{
+      position:absolute;
+      width:94px;
+      height:82px;
+      left:23px;
+      bottom:18px;
+      background:linear-gradient(180deg, #92a382, #738564);
+      border:3px solid var(--olive-dark);
+      border-radius:20px 20px 18px 18px;
+    }
+
+    .body::before{
+      content:"";
+      position:absolute;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:#d8d1c2;
+      border:2px solid var(--olive-dark);
+      left:50%;
+      transform:translateX(-50%);
+      top:10px;
+    }
+
+    .arm{
+      position:absolute;
+      width:20px;
+      height:42px;
+      background:#92a382;
+      border:3px solid var(--olive-dark);
+      border-radius:20px;
+      top:94px;
+    }
+
+    .arm.left{ left:10px; transform:rotate(12deg); }
+    .arm.right{ right:10px; transform:rotate(-12deg); }
+
+    .leg{
+      position:absolute;
+      width:18px;
+      height:40px;
+      background:#738564;
+      border:3px solid var(--olive-dark);
+      border-radius:16px;
+      bottom:0;
+    }
+
+    .leg.left{ left:40px; }
+    .leg.right{ right:40px; }
+
+    .mascot-labels{
+      display:flex;
+      justify-content:center;
+      gap:16px;
+      margin-top:6px;
+      font-size:0.95rem;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .section{
+      margin-top:22px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:18px;
+      margin-top:18px;
+    }
+
+    .count-card{
+      grid-column: span 4;
+      padding:22px;
+    }
+
+    .count-card h3{
+      margin:0 0 6px;
+      font-size:1rem;
+      color:var(--olive-dark);
+    }
+
+    .big-number{
+      font-size:2.3rem;
+      font-weight:800;
+      margin:8px 0 4px;
+    }
+
+    .count-caption{
+      color:var(--muted);
+      line-height:1.55;
+      font-size:0.96rem;
+    }
+
+    .progress-card{
+      grid-column: span 8;
+      padding:22px;
+    }
+
+    .section-title{
+      margin:0 0 8px;
+      font-size:1.2rem;
+    }
+
+    .progress-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .progress-meta{
+      color:var(--muted);
+      font-size:0.96rem;
+      line-height:1.6;
+    }
+
+    .progress{
+      width:100%;
+      height:18px;
+      background:#edf2e8;
+      border-radius:999px;
+      overflow:hidden;
+      margin-top:16px;
+      border:1px solid #dfe7d7;
+    }
+
+    .progress-fill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, #7f9270, #a2b293);
+      border-radius:999px;
+      transition:width 0.6s ease;
+    }
+
+    .feature-card{
+      padding:22px;
+    }
+
+    .letter-card{
+      grid-column: span 7;
+    }
+
+    .bookout-card{
+      grid-column: span 5;
+    }
+
+    .memory-card{
+      grid-column: span 12;
+    }
+
+    textarea, input[type="text"], input[type="date"], input[type="password"]{
+      width:100%;
+      border:1px solid #d8e0d0;
+      background:#fcfdfb;
+      color:var(--text);
+      border-radius:16px;
+      padding:14px 14px;
+      font:inherit;
+      outline:none;
+      transition:0.2s ease;
+    }
+
+    textarea:focus, input:focus{
+      border-color:var(--sage);
+      box-shadow:0 0 0 4px rgba(168,184,156,0.16);
+    }
+
+    textarea{
+      resize:vertical;
+      min-height:140px;
+      line-height:1.6;
+    }
+
+    .btn{
+      border:none;
+      border-radius:14px;
+      padding:12px 16px;
+      font:inherit;
+      font-weight:700;
+      cursor:pointer;
+      transition:0.2s ease;
+    }
+
+    .btn-primary{
+      background:var(--olive);
+      color:#fff;
+    }
+
+    .btn-primary:hover{ background:var(--olive-dark); }
+
+    .btn-secondary{
+      background:#eef3e9;
+      color:var(--olive-dark);
+      border:1px solid #dbe4d3;
+    }
+
+    .btn-secondary:hover{ background:#e6ede0; }
+
+    .btn-danger{
+      background:#f6eaea;
+      color:var(--danger);
+      border:1px solid #ebd4d4;
+    }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .message-box{
+      background:#f8fbf5;
+      border:1px dashed #cdd8c2;
+      padding:18px;
+      border-radius:18px;
+      margin-top:14px;
+      white-space:pre-wrap;
+      line-height:1.8;
+    }
+
+    .tiny{
+      font-size:0.88rem;
+      color:var(--muted);
+      line-height:1.55;
+    }
+
+    .schedule{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:10px;
+    }
+
+    .schedule-box{
+      background:#f8fbf5;
+      border:1px solid #e1e8da;
+      border-radius:18px;
+      padding:15px;
+    }
+
+    .schedule-label{
+      font-size:0.88rem;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    .schedule-value{
+      font-size:1.08rem;
+      font-weight:800;
+      color:var(--olive-dark);
+    }
+
+    .memory-inputs{
+      display:grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap:12px;
+    }
+
+    .memory-list{
+      margin-top:16px;
+      display:grid;
+      gap:10px;
+    }
+
+    .memory-item{
+      background:#f9fbf7;
+      border:1px solid #e1e8da;
+      border-radius:18px;
+      padding:14px 14px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .memory-item-title{
+      font-weight:800;
+      margin-bottom:4px;
+    }
+
+    .memory-item-date{
+      font-size:0.88rem;
+      color:var(--muted);
+    }
+
+    .edit-panel{
+      margin-top:18px;
+      padding:18px;
+      background:#f7faf4;
+      border:1px solid #dde6d5;
+      border-radius:18px;
+    }
+
+    .hidden{
+      display:none !important;
+    }
+
+    .footer-note{
+      text-align:center;
+      color:var(--muted);
+      font-size:0.9rem;
+      margin-top:20px;
+      line-height:1.6;
+    }
+
+    .reveal-overlay{
+      position:fixed;
+      inset:0;
+      background:linear-gradient(180deg, rgba(242,247,238,0.98), rgba(228,236,222,0.98));
+      z-index:999;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
+
+    .reveal-card{
+      width:min(720px, 100%);
+      background:white;
+      border-radius:30px;
+      box-shadow:0 18px 50px rgba(41, 51, 34, 0.16);
+      overflow:hidden;
+      border:1px solid #edf2e8;
+    }
+
+    .reveal-top{
+      padding:28px 24px 16px;
+      text-align:center;
+      background:linear-gradient(180deg, #f4f8f0, #eef4e8);
+    }
+
+    .envelope{
+      width:110px;
+      height:74px;
+      background:#fff;
+      border:3px solid var(--olive-dark);
+      margin:0 auto 18px;
+      border-radius:10px;
+      position:relative;
+    }
+
+    .envelope:before{
+      content:"";
+      position:absolute;
+      left:0; right:0;
+      top:0;
+      margin:auto;
+      width:0; height:0;
+      border-left:52px solid transparent;
+      border-right:52px solid transparent;
+      border-top:38px solid #dfe8d6;
+    }
+
+    .seal{
+      width:24px; height:24px;
+      border-radius:50%;
+      background:var(--olive);
+      position:absolute;
+      left:0; right:0; top:27px;
+      margin:auto;
+      border:2px solid var(--olive-dark);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:12px;
+      font-weight:700;
+      z-index:2;
+    }
+
+    .reveal-content{
+      padding:24px;
+    }
+
+    .reveal-letter{
+      background:#fbfdf9;
+      border:1px solid #e4ebde;
+      border-radius:20px;
+      padding:18px;
+      white-space:pre-wrap;
+      line-height:1.85;
+      color:#394131;
+    }
+
+    .countdown-inline{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .mini-count{
+      background:#f8fbf5;
+      border:1px solid #e2eadb;
+      border-radius:16px;
+      padding:12px 14px;
+      min-width:90px;
+      text-align:center;
+    }
+
+    .mini-count .num{
+      font-size:1.4rem;
+      font-weight:800;
+      color:var(--olive-dark);
+    }
+
+    .mini-count .lbl{
+      font-size:0.8rem;
+      color:var(--muted);
+      margin-top:2px;
+    }
+
+    @media (max-width: 900px){
+      .hero{
+        grid-template-columns:1fr;
+      }
+
+      .count-card,
+      .progress-card,
+      .letter-card,
+      .bookout-card,
+      .memory-card{
+        grid-column:span 12;
+      }
+    }
+
+    @media (max-width: 640px){
+      .container{
+        width:min(95vw, 100%);
+      }
+
+      .hero-main, .hero-side, .count-card, .progress-card, .feature-card{
+        padding:18px;
+      }
+
+      .memory-inputs, .schedule{
+        grid-template-columns:1fr;
+      }
+
+      .mascot{
+        width:120px;
+        height:156px;
+      }
+
+      .head{ left:5px; }
+      .head.bear{ left:5px; }
+      .body{ left:13px; }
+      .leg.left{ left:30px; }
+      .leg.right{ right:30px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="revealOverlay" class="reveal-overlay">
+    <div class="reveal-card">
+      <div class="reveal-top">
+        <div class="envelope">
+          <div class="seal">♡</div>
+        </div>
+        <div class="badge">A little surprise for Heinbobo</div>
+        <h2 style="margin:14px 0 8px;">Open your letter 💌</h2>
+        <p class="tiny" style="max-width:540px;margin:0 auto;">
+          A small little place made specially for your NS journey — so we can count down the days,
+          celebrate your bookouts, and look forward to your ORD together.
+        </p>
+      </div>
+      <div class="reveal-content">
+        <div id="revealLetter" class="reveal-letter"></div>
+        <div class="btn-row" style="justify-content:center; margin-top:18px;">
+          <button class="btn btn-primary" onclick="openSurprise()">Open Heinbobo's Little World ♡</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <section class="hero">
+      <div class="card hero-main">
+        <div class="badge">🪖 Guards journey • Heinbobo's NS Countdown</div>
+        <h1>Heinbobo's Little Army World ♡</h1>
+        <p class="subtitle">
+          A soft green countdown space for your NS journey — from now until ORD.
+          A little home for milestones, bookouts, sweet letters, and all the small things
+          we want to remember together.
+        </p>
+        <div class="mini-meta">
+          <div class="pill">Enlisted: <strong id="metaEnlist">12 May 2026</strong></div>
+          <div class="pill">Expected ORD: <strong id="metaOrd">11 May 2028</strong></div>
+          <div class="pill">Unit: <strong>Guards</strong></div>
+          <div class="pill">Next bookout: <strong id="metaBookout">13 Nov 2026</strong></div>
+        </div>
+      </div>
+
+      <div class="card hero-side">
+        <div>
+          <div class="mascot-wrap">
+            <div class="mascot" aria-label="Soldier bunny mascot">
+              <div class="ear left"></div>
+              <div class="ear right"></div>
+              <div class="head">
+                <div class="beret"></div>
+                <div class="face">
+                  <div class="eye left"></div>
+                  <div class="eye right"></div>
+                  <div class="blush left"></div>
+                  <div class="blush right"></div>
+                  <div class="mouth">ᴗ</div>
+                </div>
+              </div>
+              <div class="arm left"></div>
+              <div class="arm right"></div>
+              <div class="body"></div>
+              <div class="leg left"></div>
+              <div class="leg right"></div>
+            </div>
+
+            <div class="mascot" aria-label="Soldier bear mascot">
+              <div class="bear-ear left"></div>
+              <div class="bear-ear right"></div>
+              <div class="head bear">
+                <div class="beret"></div>
+                <div class="face">
+                  <div class="eye left"></div>
+                  <div class="eye right"></div>
+                  <div class="blush left"></div>
+                  <div class="blush right"></div>
+                  <div class="mouth">ʋ</div>
+                </div>
+              </div>
+              <div class="arm left"></div>
+              <div class="arm right"></div>
+              <div class="body"></div>
+              <div class="leg left"></div>
+              <div class="leg right"></div>
+            </div>
+          </div>
+
+          <div class="mascot-labels">
+            <span>🐰 Ruienbobo</span>
+            <span>🧸 Heinbobo</span>
+          </div>
+        </div>
+
+        <div class="tiny" style="text-align:center;">
+          Ruienbobo the rabbit and Heinbobo the bear — counting down the days together 💚
+        </div>
+      </div>
+    </section>
+
+    <section class="grid section">
+      <div class="card count-card">
+        <h3>Days until ORD</h3>
+        <div id="ordDays" class="big-number">—</div>
+        <div class="count-caption">
+          Only <span id="remainingText">—</span> more days until Heinbobo finishes NS.
+        </div>
+      </div>
+
+      <div class="card count-card">
+        <h3>Next bookout countdown</h3>
+        <div id="bookoutDays" class="big-number">—</div>
+        <div class="count-caption">
+          Until Heinbobo comes home again 🏠
+        </div>
+        <div class="countdown-inline" id="bookoutInline">
+          <div class="mini-count">
+            <div class="num" id="boHours">--</div>
+            <div class="lbl">hours</div>
+          </div>
+          <div class="mini-count">
+            <div class="num" id="boMinutes">--</div>
+            <div class="lbl">minutes</div>
+          </div>
+          <div class="mini-count">
+            <div class="num" id="boSeconds">--</div>
+            <div class="lbl">seconds</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card count-card">
+        <h3>Current phase</h3>
+        <div id="phaseText" class="big-number" style="font-size:1.7rem;">Guards Era</div>
+        <div class="count-caption">
+          BMT completed ♡ Now continuing the rest of his NS journey one step at a time.
+        </div>
+      </div>
+
+      <div class="card progress-card">
+        <div class="progress-row">
+          <div>
+            <h3 class="section-title">NS progress</h3>
+            <div class="progress-meta">
+              Served: <strong id="servedDays">—</strong> days<br/>
+              Remaining: <strong id="remainingDays">—</strong> days<br/>
+              Progress: <strong id="progressPercent">—</strong>
+            </div>
+          </div>
+          <div class="tiny" style="max-width:320px;">
+            A little progress bar to remind both of you that even when the days feel long,
+            he’s still moving closer and closer to ORD.
+          </div>
+        </div>
+        <div class="progress">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="card feature-card letter-card">
+        <h3 class="section-title">Letter for my soldier 💌</h3>
+        <p class="tiny">
+          This is the sweet message section. Since you wanted the editing preference to be <strong>you only</strong>,
+          only the person with the edit passcode can change this.
+        </p>
+
+        <div id="displayLetter" class="message-box"></div>
+
+        <div id="editorLocked" class="edit-panel">
+          <label for="editPass" class="tiny" style="display:block; margin-bottom:8px;">Enter edit passcode</label>
+          <input id="editPass" type="password" placeholder="Enter your passcode">
+          <div class="btn-row">
+            <button class="btn btn-secondary" onclick="unlockEditor()">Unlock editing</button>
+          </div>
+        </div>
+
+        <div id="letterEditor" class="edit-panel hidden">
+          <label for="letterInput" class="tiny" style="display:block; margin-bottom:8px;">Edit your letter</label>
+          <textarea id="letterInput"></textarea>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveLetter()">Save letter</button>
+            <button class="btn btn-secondary" onclick="lockEditor()">Lock editing</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card feature-card bookout-card">
+        <h3 class="section-title">Bookout corner 🏠</h3>
+        <p class="tiny">
+          Starting with his bookout on <strong>13 Nov 2026</strong>. You can update this later whenever
+          plans or schedules change.
+        </p>
+
+        <div class="schedule">
+          <div class="schedule-box">
+            <div class="schedule-label">Next bookout</div>
+            <div id="displayBookout" class="schedule-value">13 Nov 2026</div>
+          </div>
+          <div class="schedule-box">
+            <div class="schedule-label">Next book-in</div>
+            <div id="displayBookin" class="schedule-value">15 Nov 2026</div>
+          </div>
+        </div>
+
+        <div class="message-box" style="margin-top:14px;">
+          <strong>Usual routine:</strong><br/>
+          Books out on Fridays<br/>
+          Books in on Sundays
+        </div>
+
+        <div id="bookoutEditor" class="edit-panel hidden">
+          <label class="tiny" style="display:block; margin-bottom:8px;">Update bookout details</label>
+          <input id="bookoutInput" type="date" />
+          <div style="height:10px;"></div>
+          <input id="bookinInput" type="date" />
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveSchedule()">Save schedule</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card feature-card memory-card">
+        <h3 class="section-title">Our little memories ✨</h3>
+        <p class="tiny">
+          A tiny memory list for your dates, milestones, special moments, or anything you both want to remember.
+        </p>
+
+        <div class="memory-inputs hidden" id="memoryEditor">
+          <input id="memoryTitle" type="text" placeholder="Memory title (e.g. First Guards bookout date)">
+          <input id="memoryDate" type="date">
+        </div>
+        <div class="btn-row hidden" id="memoryEditorBtns">
+          <button class="btn btn-primary" onclick="addMemory()">Add memory</button>
+        </div>
+
+        <div id="memoryList" class="memory-list"></div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      Made with love for Heinbobo 💚<br/>
+      Tip: if you want both of you to see the same updates on different phones, this should be uploaded online later
+      (for example GitHub Pages + Supabase / Firebase). This current version saves edits on the device/browser itself.
+    </div>
+  </div>
+
+  <script>
+    const PASSCODE = "heinbobo";
+    const ENLIST_DATE = new Date("2026-05-12T00:00:00");
+    const ORD_DATE = new Date("2028-05-11T23:59:59");
+
+    const defaultData = {
+      nextBookout: "2026-11-13T18:00:00",
+      nextBookin: "2026-11-15T20:00:00",
+      letter: `Hi Heinbobo,
+
+Surprise ♡ I made this little website for you so we can count down your NS journey together.
+
+You’ve already made it through BMT, and now you’re in Guards — and I’m so proud of you for pushing through every tiring day, every early morning, and every tough week.
+
+I know NS can be draining sometimes, so I wanted to make a little space that reminds you that every day served is one day closer to home, one day closer to our next bookout, and one day closer to ORD.
+
+No matter how busy or shag you are, I’ll always be here cheering you on, missing you, and waiting for you.
+
+Let’s get through the rest of this together okay?
+
+Love,
+your #1 supportaaa enen see 💚`,
+      revealLetter: `Hi Heinbobo ♡
+
+I made this little surprise for you for your bookout.
+
+Since you’re already through BMT and now in Guards, I wanted to make you something we can use together for the rest of your NS journey. A small little place to keep track of your countdown, your bookouts, your ORD, and our memories together.
+
+Even if NS gets tiring, I hope this reminds you that every day passing means you’re getting closer to coming home, closer to our next date, and closer to ORD.
+
+I’m proud of you always.
+
+Open your little world now 💚`,
+      memories: [
+        { title: "Heinbobo's first week in Guards ♡", date: "2026-11-06" },
+        { title: "Surprise website for bookout 💌", date: "2026-11-13" }
+      ]
+    };
+
+    function loadData(){
+      const saved = localStorage.getItem("heinbobo_ns_data");
+      if(saved){
+        try{
+          return { ...defaultData, ...JSON.parse(saved) };
+        }catch(e){
+          return { ...defaultData };
+        }
+      }
+      return { ...defaultData };
+    }
+
+    let appData = loadData();
+
+    function saveData(){
+      localStorage.setItem("heinbobo_ns_data", JSON.stringify(appData));
+    }
+
+    function formatDate(dateInput){
+      const d = new Date(dateInput);
+      return d.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      });
+    }
+
+    function diffWholeDays(from, to){
+      const a = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+      const b = new Date(to.getFullYear(), to.getMonth(), to.getDate());
+      const diff = b - a;
+      return Math.ceil(diff / (1000*60*60*24));
+    }
+
+    function openSurprise(){
+      document.getElementById("revealOverlay").classList.add("hidden");
+      sessionStorage.setItem("heinbobo_reveal_opened", "1");
+    }
+
+    function maybeHideReveal(){
+      if(sessionStorage.getItem("heinbobo_reveal_opened") === "1"){
+        document.getElementById("revealOverlay").classList.add("hidden");
+      }
+    }
+
+    function updateStaticFields(){
+      document.getElementById("metaEnlist").textContent = formatDate(ENLIST_DATE);
+      document.getElementById("metaOrd").textContent = formatDate(ORD_DATE);
+      document.getElementById("metaBookout").textContent = formatDate(appData.nextBookout);
+      document.getElementById("displayBookout").textContent = formatDate(appData.nextBookout);
+      document.getElementById("displayBookin").textContent = formatDate(appData.nextBookin);
+      document.getElementById("displayLetter").textContent = appData.letter;
+      document.getElementById("revealLetter").textContent = appData.revealLetter;
+
+      document.getElementById("letterInput").value = appData.letter;
+      document.getElementById("bookoutInput").value = new Date(appData.nextBookout).toISOString().slice(0,10);
+      document.getElementById("bookinInput").value = new Date(appData.nextBookin).toISOString().slice(0,10);
+    }
+
+    function updateCountdowns(){
+      const now = new Date();
+
+      const totalDays = Math.max(1, diffWholeDays(ENLIST_DATE, ORD_DATE));
+      const servedDays = Math.max(0, totalDays - diffWholeDays(now, ORD_DATE));
+      const remainingDays = Math.max(0, diffWholeDays(now, ORD_DATE));
+      const progressPct = Math.min(100, Math.max(0, (servedDays / totalDays) * 100));
+
+      document.getElementById("ordDays").textContent = remainingDays.toLocaleString();
+      document.getElementById("remainingText").textContent = remainingDays.toLocaleString();
+      document.getElementById("servedDays").textContent = servedDays.toLocaleString();
+      document.getElementById("remainingDays").textContent = remainingDays.toLocaleString();
+      document.getElementById("progressPercent").textContent = progressPct.toFixed(1) + "%";
+      document.getElementById("progressFill").style.width = progressPct + "%";
+
+      const bookoutDate = new Date(appData.nextBookout);
+      const ms = bookoutDate - now;
+      const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+      const d = Math.floor(totalSeconds / 86400);
+      const h = Math.floor((totalSeconds % 86400) / 3600);
+      const m = Math.floor((totalSeconds % 3600) / 60);
+      const s = totalSeconds % 60;
+
+      document.getElementById("bookoutDays").textContent = d + " day" + (d !== 1 ? "s" : "");
+      document.getElementById("boHours").textContent = String(h).padStart(2, "0");
+      document.getElementById("boMinutes").textContent = String(m).padStart(2, "0");
+      document.getElementById("boSeconds").textContent = String(s).padStart(2, "0");
+    }
+
+    function unlockEditor(){
+      const pass = document.getElementById("editPass").value.trim();
+      if(pass === PASSCODE){
+        document.getElementById("editorLocked").classList.add("hidden");
+        document.getElementById("letterEditor").classList.remove("hidden");
+        document.getElementById("bookoutEditor").classList.remove("hidden");
+        document.getElementById("memoryEditor").classList.remove("hidden");
+        document.getElementById("memoryEditorBtns").classList.remove("hidden");
+      }else{
+        alert("Wrong passcode ♡");
+      }
+    }
+
+    function lockEditor(){
+      document.getElementById("editorLocked").classList.remove("hidden");
+      document.getElementById("letterEditor").classList.add("hidden");
+      document.getElementById("bookoutEditor").classList.add("hidden");
+      document.getElementById("memoryEditor").classList.add("hidden");
+      document.getElementById("memoryEditorBtns").classList.add("hidden");
+      document.getElementById("editPass").value = "";
+    }
+
+    function saveLetter(){
+      appData.letter = document.getElementById("letterInput").value.trim() || defaultData.letter;
+      saveData();
+      updateStaticFields();
+      alert("Letter saved ♡");
+    }
+
+    function saveSchedule(){
+      const bookoutVal = document.getElementById("bookoutInput").value;
+      const bookinVal = document.getElementById("bookinInput").value;
+
+      if(!bookoutVal || !bookinVal){
+        alert("Please fill in both dates.");
+        return;
+      }
+
+      appData.nextBookout = bookoutVal + "T18:00:00";
+      appData.nextBookin = bookinVal + "T20:00:00";
+      saveData();
+      updateStaticFields();
+      updateCountdowns();
+      alert("Bookout schedule updated ♡");
+    }
+
+    function renderMemories(){
+      const list = document.getElementById("memoryList");
+      list.innerHTML = "";
+
+      if(!appData.memories || appData.memories.length === 0){
+        list.innerHTML = `<div class="tiny">No memories added yet. Add your first one when edit mode is unlocked ♡</div>`;
+        return;
+      }
+
+      appData.memories
+        .slice()
+        .sort((a,b)=> new Date(b.date) - new Date(a.date))
+        .forEach((item, index) => {
+          const row = document.createElement("div");
+          row.className = "memory-item";
+
+          row.innerHTML = `
+            <div>
+              <div class="memory-item-title">${escapeHtml(item.title)}</div>
+              <div class="memory-item-date">${formatDate(item.date)}</div>
+            </div>
+            <div id="memoryDeleteWrap${index}" class="hidden">
+              <button class="btn btn-danger" onclick="deleteMemory(${index})">Delete</button>
+            </div>
+          `;
+
+          list.appendChild(row);
+        });
+
+      const isUnlocked = !document.getElementById("letterEditor").classList.contains("hidden");
+      if(isUnlocked){
+        showDeleteButtons();
+      }
+    }
+
+    function showDeleteButtons(){
+      const list = document.querySelectorAll("[id^='memoryDeleteWrap']");
+      list.forEach(el => el.classList.remove("hidden"));
+    }
+
+    function hideDeleteButtons(){
+      const list = document.querySelectorAll("[id^='memoryDeleteWrap']");
+      list.forEach(el => el.classList.add("hidden"));
+    }
+
+    function addMemory(){
+      const title = document.getElementById("memoryTitle").value.trim();
+      const date = document.getElementById("memoryDate").value;
+
+      if(!title || !date){
+        alert("Please enter a memory title and date.");
+        return;
+      }
+
+      appData.memories.push({ title, date });
+      saveData();
+      renderMemories();
+
+      document.getElementById("memoryTitle").value = "";
+      document.getElementById("memoryDate").value = "";
+    }
+
+    function deleteMemory(index){
+      const sorted = appData.memories
+        .slice()
+        .sort((a,b)=> new Date(b.date) - new Date(a.date));
+
+      const itemToDelete = sorted[index];
+      const originalIndex = appData.memories.findIndex(
+        m => m.title === itemToDelete.title && m.date === itemToDelete.date
+      );
+
+      if(originalIndex > -1){
+        appData.memories.splice(originalIndex, 1);
+        saveData();
+        renderMemories();
+      }
+    }
+
+    function escapeHtml(str){
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function init(){
+      maybeHideReveal();
+      updateStaticFields();
+      updateCountdowns();
+      renderMemories();
+      setInterval(updateCountdowns, 1000);
+    }
+
+    const originalUnlock = unlockEditor;
+    unlockEditor = function(){
+      const pass = document.getElementById("editPass").value.trim();
+      if(pass === PASSCODE){
+        document.getElementById("editorLocked").classList.add("hidden");
+        document.getElementById("letterEditor").classList.remove("hidden");
+        document.getElementById("bookoutEditor").classList.remove("hidden");
+        document.getElementById("memoryEditor").classList.remove("hidden");
+        document.getElementById("memoryEditorBtns").classList.remove("hidden");
+        showDeleteButtons();
+      }else{
+        alert("Wrong passcode ♡");
+      }
+    };
+
+    const originalLock = lockEditor;
+    lockEditor = function(){
+      document.getElementById("editorLocked").classList.remove("hidden");
+      document.getElementById("letterEditor").classList.add("hidden");
+      document.getElementById("bookoutEditor").classList.add("hidden");
+      document.getElementById("memoryEditor").classList.add("hidden");
+      document.getElementById("memoryEditorBtns").classList.add("hidden");
+      document.getElementById("editPass").value = "";
+      hideDeleteButtons();
+    };
+
+    init();
+  </script>
+
+<!-- HEINBOBO PET UPGRADE: START -->
+
+<style>
+  .hb-pet-card {
+    margin-top: 22px;
+    padding: 24px;
+    text-align: center;
+  }
+
+  .hb-pet-card h2 {
+    margin: 0 0 8px;
+    color: #4f5d42;
+  }
+
+  .hb-pet-status {
+    color: #6d7567;
+    margin: 10px auto 18px;
+    line-height: 1.6;
+    min-height: 26px;
+  }
+
+  .hb-happiness {
+    max-width: 420px;
+    margin: 0 auto 20px;
+  }
+
+  .hb-happiness-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: #4f5d42;
+  }
+
+  .hb-happiness-track {
+    height: 16px;
+    background: #e7ecdf;
+    border-radius: 30px;
+    overflow: hidden;
+  }
+
+  #hbHappinessFill {
+    height: 100%;
+    width: 50%;
+    background: linear-gradient(90deg, #9eb68c, #d0b5bb);
+    border-radius: 30px;
+    transition: width 0.5s ease;
+  }
+
+  .hb-pet-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .hb-pet-button {
+    background: #eff4e9;
+    border: 1px solid #d4dfc9;
+    color: #4f5d42;
+    border-radius: 16px;
+    padding: 13px 18px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+  }
+
+  .hb-pet-button:hover {
+    background: #dfead6;
+    transform: translateY(-3px);
+  }
+
+  .hb-pet-button:active {
+    transform: scale(0.95);
+  }
+
+  .hb-pet-hint {
+    font-size: 0.85rem;
+    color: #899381;
+    margin-top: 18px;
+  }
+
+  .mascot {
+    cursor: pointer;
+  }
+
+  .mascot:focus-visible {
+    outline: 3px solid #a8b89c;
+    outline-offset: 6px;
+    border-radius: 20px;
+  }
+
+  .mascot.hb-happy {
+    animation: hbJump 0.55s ease-in-out 2;
+  }
+
+  @keyframes hbJump {
+    0%, 100% { transform: translateY(0) scale(1); }
+    45% { transform: translateY(-22px) scale(1.07); }
+  }
+
+  .mascot-wrap.hb-cuddling .mascot:first-child {
+    animation: hbCuddleLeft 1.2s ease-in-out;
+  }
+
+  .mascot-wrap.hb-cuddling .mascot:nth-child(2) {
+    animation: hbCuddleRight 1.2s ease-in-out;
+  }
+
+  @keyframes hbCuddleLeft {
+    0%, 100% { transform: translateX(0); }
+    45% { transform: translateX(16px) rotate(7deg); }
+  }
+
+  @keyframes hbCuddleRight {
+    0%, 100% { transform: translateX(0); }
+    45% { transform: translateX(-16px) rotate(-7deg); }
+  }
+
+  .hb-floating-heart {
+    position: fixed;
+    z-index: 100;
+    pointer-events: none;
+    font-size: 26px;
+    animation: hbHeartFloat 1.2s ease-out forwards;
+  }
+
+  @keyframes hbHeartFloat {
+    from {
+      opacity: 1;
+      transform: translateY(0) scale(0.7);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-85px) scale(1.4);
+    }
+  }
+
+  @media(max-width: 600px) {
+    .hb-pet-card { padding: 18px; }
+    .hb-pet-button { flex: 1 1 135px; }
+  }
+
+  @media(prefers-reduced-motion: reduce) {
+    .mascot.hb-happy,
+    .mascot-wrap.hb-cuddling .mascot,
+    .hb-floating-heart {
+      animation: none;
+    }
+  }
+</style>
+
+<section class="card hb-pet-card" id="hbPetCorner">
+  <h2>Our Little Pet Corner 🐰🧸</h2>
+
+  <p class="tiny">
+    Ruienbobo the rabbit and Heinbobo the bear waiting for the next bookout together ♡
+  </p>
+
+  <p class="hb-pet-status" id="hbPetStatus" aria-live="polite">
+    Your little babies are happy to see you! 💚
+  </p>
+
+  <div class="hb-happiness">
+    <div class="hb-happiness-label">
+      <span>💕 Happiness</span>
+      <span id="hbHappinessValue">50%</span>
+    </div>
+
+    <div class="hb-happiness-track">
+      <div id="hbHappinessFill"></div>
+    </div>
+  </div>
+
+  <div class="hb-pet-actions">
+    <button type="button" class="hb-pet-button" id="hbPetBunny">
+      🐰 Pet Ruienbobo
+    </button>
+
+    <button type="button" class="hb-pet-button" id="hbPetBear">
+      🧸 Pet Heinbobo
+    </button>
+
+    <button type="button" class="hb-pet-button" id="hbFeed">
+      🍓 Give snacks
+    </button>
+
+    <button type="button" class="hb-pet-button" id="hbCuddle">
+      💗 Cuddle together
+    </button>
+  </div>
+
+  <p class="hb-pet-hint">
+    Psst... you can tap the mascots above too!
+  </p>
+</section>
+
+<script>
+(function () {
+  const pets = document.querySelectorAll(".mascot-wrap .mascot");
+  const petWrap = document.querySelector(".mascot-wrap");
+
+  const status = document.getElementById("hbPetStatus");
+  const meter = document.getElementById("hbHappinessFill");
+  const value = document.getElementById("hbHappinessValue");
+
+  const STORAGE_KEY = "heinbobo_pet_happiness";
+
+  let happiness = 50;
+
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved !== null && Number.isFinite(Number(saved))) {
+      happiness = Math.max(0, Math.min(100, Number(saved)));
+    }
+  } catch (error) {
+    console.warn("Pet happiness cannot be saved here.");
+  }
+
+  function updateHappiness(amount) {
+    happiness = Math.min(100, happiness + amount);
+
+    meter.style.width = happiness + "%";
+    value.textContent = happiness + "%";
+
+    try {
+      localStorage.setItem(STORAGE_KEY, happiness);
+    } catch (error) {
+      console.warn("Could not save happiness.");
+    }
+  }
+
+  function reaction(message) {
+    status.textContent = message;
+  }
+
+  function showHeart(element, emoji = "💚") {
+    if (!element) return;
+
+    const rect = element.getBoundingClientRect();
+    const heart = document.createElement("span");
+
+    heart.className = "hb-floating-heart";
+    heart.textContent = emoji;
+
+    heart.style.left = (rect.left + rect.width / 2 - 12) + "px";
+    heart.style.top = (rect.top + rect.height / 3) + "px";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 1250);
+  }
+
+  function jump(pet) {
+    if (!pet) return;
+
+    pet.classList.remove("hb-happy");
+    void pet.offsetWidth;
+    pet.classList.add("hb-happy");
+
+    showHeart(pet, "💕");
+
+    setTimeout(() => {
+      pet.classList.remove("hb-happy");
+    }, 1150);
+  }
+
+  function petBunny() {
+    reaction("Ruienbobo: hehe more head pats please!! 🐰💚");
+    updateHappiness(5);
+    jump(pets[0]);
+  }
+
+  function petBear() {
+    reaction("Heinbobo: hehe I love cuddles!! 🧸💚");
+    updateHappiness(5);
+    jump(pets[1]);
+  }
+
+  function feedPets() {
+    const messages = [
+      "Ruienbobo and Heinbobo shared some strawberries! 🍓",
+      "YUMMM! Both babies are so happy! 🍪",
+      "Ruienbobo saved the last snack for Heinbobo 🥹",
+      "Snack time is the best time!! 🍰"
+    ];
+
+    reaction(messages[Math.floor(Math.random() * messages.length)]);
+
+    updateHappiness(12);
+
+    pets.forEach(pet => {
+      jump(pet);
+      showHeart(pet, "🍓");
+    });
+  }
+
+  function cuddlePets() {
+    reaction("Ruienbobo and Heinbobo are cuddling! They missed each other 🥹💗");
+
+    updateHappiness(15);
+
+    if (petWrap) {
+      petWrap.classList.remove("hb-cuddling");
+      void petWrap.offsetWidth;
+      petWrap.classList.add("hb-cuddling");
+
+      setTimeout(() => {
+        petWrap.classList.remove("hb-cuddling");
+      }, 1250);
+    }
+
+    if (pets[0]) showHeart(pets[0], "💗");
+    if (pets[1]) showHeart(pets[1], "💗");
+  }
+
+  document.getElementById("hbPetBunny").addEventListener("click", petBunny);
+  document.getElementById("hbPetBear").addEventListener("click", petBear);
+  document.getElementById("hbFeed").addEventListener("click", feedPets);
+  document.getElementById("hbCuddle").addEventListener("click", cuddlePets);
+
+  pets.forEach((pet, index) => {
+    pet.setAttribute("role", "button");
+    pet.setAttribute("tabindex", "0");
+    pet.setAttribute("aria-label",
+      index === 0 ? "Pet Ruienbobo rabbit" : "Pet Heinbobo bear"
+    );
+
+    const interact = index === 0 ? petBunny : petBear;
+
+    pet.addEventListener("click", interact);
+
+    pet.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        interact();
+      }
+    });
+  });
+
+  // Move the new pet section directly below the homepage hero.
+  const hero = document.querySelector(".hero");
+  const corner = document.getElementById("hbPetCorner");
+
+  if (hero && corner) {
+    hero.insertAdjacentElement("afterend", corner);
+  }
+
+  updateHappiness(0);
+})();
+</script>
+
+<!-- HEINBOBO PET UPGRADE: END -->
+
+</body>
+
+<!-- PET EXPRESSIONS UPGRADE: START -->
+
+<style>
+  /* Make sure bubbles can appear outside the mascot area */
+  .hero-side {
+    overflow: visible;
+  }
+
+  .mascot-wrap {
+    overflow: visible;
+  }
+
+  .mascot {
+    isolation: isolate;
+  }
+
+  /* Cute speech bubbles */
+  .hb-speech {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: 180px;
+    padding: 10px 14px;
+    border-radius: 17px;
+    background: #fffdf9;
+    border: 2px solid #d4dfc9;
+    box-shadow: 0 6px 16px rgba(70, 83, 59, 0.12);
+    color: #4f5d42;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: center;
+    white-space: normal;
+    pointer-events: none;
+    z-index: 20;
+    animation: hbBubbleAppear 0.25s ease-out;
+  }
+
+  .hb-speech::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    background: #fffdf9;
+    border-right: 2px solid #d4dfc9;
+    border-bottom: 2px solid #d4dfc9;
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  @keyframes hbBubbleAppear {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 8px) scale(0.85);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+    }
+  }
+
+  /* Happy eyes */
+  .mascot.hb-face-happy .eye {
+    height: 7px;
+    width: 13px;
+    top: 44px;
+    border-radius: 50% 50% 0 0;
+    background: transparent;
+    border-top: 3px solid #4f5d42;
+  }
+
+  /* Excited sparkling eyes */
+  .mascot.hb-face-excited .eye {
+    width: 13px;
+    height: 15px;
+    top: 38px;
+    border-radius: 50%;
+    background: #4f5d42;
+  }
+
+  .mascot.hb-face-excited .eye::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    top: 2px;
+    left: 3px;
+    border-radius: 50%;
+    background: white;
+  }
+
+  /* Sleepy eyes */
+  .mascot.hb-face-sleepy .eye {
+    width: 14px;
+    height: 3px;
+    top: 47px;
+    border-radius: 8px;
+    background: #4f5d42;
+  }
+
+  /* Blushing when cuddling */
+  .mascot.hb-face-love .blush {
+    background: #ee9aa6;
+    opacity: 1;
+    width: 19px;
+    height: 11px;
+  }
+
+  .mascot.hb-face-love .eye {
+    width: 12px;
+    height: 7px;
+    top: 44px;
+    border-top: 3px solid #4f5d42;
+    background: transparent;
+    border-radius: 50% 50% 0 0;
+  }
+
+  /* Tiny heart above the head */
+  .hb-love-heart {
+    position: absolute;
+    top: 6px;
+    right: -6px;
+    font-size: 25px;
+    z-index: 10;
+    pointer-events: none;
+    animation: hbHeartPulse 0.8s ease-in-out infinite alternate;
+  }
+
+  @keyframes hbHeartPulse {
+    from { transform: scale(0.85) rotate(-8deg); }
+    to { transform: scale(1.15) rotate(8deg); }
+  }
+
+  @media (max-width: 640px) {
+    .hb-speech {
+      max-width: 115px;
+      font-size: 10px;
+      padding: 7px 9px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hb-speech,
+    .hb-love-heart {
+      animation: none;
+    }
+  }
+  /* BIGGER, MORE VISIBLE PET EXPRESSIONS */
+
+/* Slightly lift the beret so the eyes show */
+.mascot .beret {
+  top: 14px;
+  transform: rotate(-12deg);
+}
+
+/* Happy expression */
+.mascot.hb-face-happy .mouth {
+  font-size: 28px;
+  top: 48px;
+}
+
+.mascot.hb-face-happy .blush {
+  opacity: 1;
+  background: #f4aab8;
+  width: 19px;
+  height: 11px;
+}
+
+/* Excited expression */
+.mascot.hb-face-excited .mouth {
+  font-size: 30px;
+  top: 48px;
+}
+
+.mascot.hb-face-excited .blush {
+  opacity: 1;
+  background: #ffb2c2;
+}
+
+/* Cuddle expression */
+.mascot.hb-face-love .mouth {
+  font-size: 27px;
+  top: 49px;
+}
+
+.mascot.hb-face-love .blush {
+  width: 22px;
+  height: 14px;
+  background: #ff9dab;
+  opacity: 1;
+}
+
+/* Add a little heart effect when they're in love */
+.mascot.hb-face-love .head {
+  box-shadow: 0 0 18px rgba(255, 155, 180, 0.35);
+}
+
+/* Make excited pets wiggle */
+.mascot.hb-face-excited {
+  animation: hbExcitedWiggle 0.3s ease-in-out 3;
+}
+
+@keyframes hbExcitedWiggle {
+  0%,100% { transform: rotate(0); }
+  25% { transform: rotate(-6deg); }
+  75% { transform: rotate(6deg); }
+}
+
+/* Make cuddle movement bigger */
+.mascot-wrap.hb-cuddling .mascot:first-child {
+  animation: hbCuddleLeftBig 1.4s ease-in-out;
+}
+
+.mascot-wrap.hb-cuddling .mascot:nth-child(2) {
+  animation: hbCuddleRightBig 1.4s ease-in-out;
+}
+
+@keyframes hbCuddleLeftBig {
+  0%,100% { transform: translateX(0); }
+  50% { transform: translateX(25px) rotate(10deg); }
+}
+
+@keyframes hbCuddleRightBig {
+  0%,100% { transform: translateX(0); }
+  50% { transform: translateX(-25px) rotate(-10deg); }
+}
+</style>
+
+<script>
+(function () {
+  // Find the mascots already on your homepage.
+  const bunny = document.querySelector(
+    ".mascot-wrap .mascot:first-child"
+  );
+
+  const bear = document.querySelector(
+    ".mascot-wrap .mascot:nth-child(2)"
+  );
+
+  if (!bunny || !bear) {
+    console.warn("Mascots not found.");
+    return;
+  }
+
+  const faceClasses = [
+    "hb-face-happy",
+    "hb-face-excited",
+    "hb-face-sleepy",
+    "hb-face-love"
+  ];
+
+  const timers = new WeakMap();
+  const originals = new WeakMap();
+
+  // Remember each mascot's normal mouth.
+  [bunny, bear].forEach(pet => {
+    const mouth = pet.querySelector(".mouth");
+
+    if (mouth) {
+      originals.set(pet, mouth.textContent);
+    }
+  });
+
+  function resetFace(pet) {
+    if (!pet) return;
+
+    pet.classList.remove(...faceClasses);
+
+    const mouth = pet.querySelector(".mouth");
+
+    if (mouth) {
+      mouth.textContent = originals.get(pet) || "ᴗ";
+    }
+
+    pet.querySelectorAll(
+      ".hb-speech, .hb-love-heart"
+    ).forEach(el => el.remove());
+  }
+
+  function showExpression(pet, mood, message) {
+    if (!pet) return;
+
+    clearTimeout(timers.get(pet));
+    resetFace(pet);
+
+    pet.classList.add("hb-face-" + mood);
+
+    const mouth = pet.querySelector(".mouth");
+
+    if (mouth) {
+      const mouths = {
+        happy: "ᴗ",
+        excited: "ω",
+        sleepy: "﹏",
+        love: "ᴗ"
+      };
+
+      mouth.textContent = mouths[mood] || "ᴗ";
+    }
+
+    // Add a speech bubble.
+    const bubble = document.createElement("div");
+    bubble.className = "hb-speech";
+    bubble.textContent = message;
+    pet.appendChild(bubble);
+
+    // Add a heart during cuddles.
+    if (mood === "love") {
+      const heart = document.createElement("span");
+      heart.className = "hb-love-heart";
+      heart.textContent = "💕";
+      pet.appendChild(heart);
+    }
+
+    // Return to normal after four seconds.
+    const timer = setTimeout(() => {
+      resetFace(pet);
+    }, 4000);
+
+    timers.set(pet, timer);
+  }
+
+  // Individual reactions
+  function reactBunny() {
+    showExpression(
+      bunny,
+      "happy",
+      "hehe i love you heinbobo!! 🐰💚"
+    );
+  }
+
+  function reactBear() {
+    showExpression(
+      bear,
+      "happy",
+      "i love you too ruienbobo!! 🧸💕"
+    );
+  }
+
+  function reactSnack() {
+    showExpression(
+      bunny,
+      "excited",
+      "YAYY strawberries!! 🍓"
+    );
+
+    showExpression(
+      bear,
+      "excited",
+      "nom nom nom!! 🍪"
+    );
+  }
+
+  function reactCuddle() {
+    showExpression(
+      bunny,
+      "love",
+      "i missed youuu 🥺"
+    );
+
+    showExpression(
+      bear,
+      "love",
+      "come here bobo 💗"
+    );
+  }
+
+  // Connect expressions to your EXISTING buttons.
+  // The original pet interactions will still work.
+  const actions = [
+    ["hbPetBunny", reactBunny],
+    ["hbPetBear", reactBear],
+    ["hbFeed", reactSnack],
+    ["hbCuddle", reactCuddle]
+  ];
+
+  actions.forEach(([id, action]) => {
+    const button = document.getElementById(id);
+
+    if (button) {
+      button.addEventListener("click", action);
+    }
+  });
+
+  // Tapping the mascots also triggers expressions.
+  bunny.addEventListener("click", reactBunny);
+  bear.addEventListener("click", reactBear);
+
+  // Support keyboard interaction too.
+  [
+    [bunny, reactBunny],
+    [bear, reactBear]
+  ].forEach(([pet, action]) => {
+    pet.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        action();
+      }
+    });
+  });
+
+  // Secret: press both mascots' buttons to see
+  // their different reactions!
+  console.log("Ruienbobo & Heinbobo are ready! 💚");
+})();
+</script>
+
+<!-- PET EXPRESSIONS UPGRADE: END -->
+
+
+<!-- HEINBOBO BOOKOUT CALENDAR: START -->
+
+<style>
+  .hb-cal {
+    grid-column: 1 / -1;
+    padding: 26px;
+    color: #4f5d42;
+  }
+
+  .hb-cal * { box-sizing: border-box; }
+
+  .hb-cal h2 {
+    text-align: center;
+    margin: 0 0 8px;
+    color: #4f5d42;
+  }
+
+  .hb-cal-intro {
+    text-align: center;
+    color: #778571;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .hb-cal-layout {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: 20px;
+  }
+
+  .hb-cal-panel {
+    background: #fbfcf8;
+    border: 1px solid #e0e9d8;
+    border-radius: 22px;
+    padding: 20px;
+    min-width: 0;
+  }
+
+  .hb-cal-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .hb-cal-nav strong {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  .hb-cal button,
+  .hb-cal input,
+  .hb-cal select {
+    font: inherit;
+  }
+
+  .hb-cal-nav button,
+  .hb-cal-action {
+    border: 1px solid #d6e1ce;
+    background: #edf3e7;
+    color: #4f5d42;
+    border-radius: 12px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .hb-cal-nav button:hover,
+  .hb-cal-action:hover {
+    background: #dce9d4;
+  }
+
+  .hb-cal-week,
+  .hb-cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .hb-cal-week {
+    margin-bottom: 8px;
+  }
+
+  .hb-cal-week span {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #788673;
+    padding: 6px 0;
+  }
+
+  .hb-cal-day {
+    min-height: 68px;
+    border: 1px solid transparent;
+    border-radius: 13px;
+    background: transparent;
+    color: #43503b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+
+  .hb-cal-day:hover:not(:disabled) {
+    background: #eef4e9;
+  }
+
+  .hb-cal-day:disabled {
+    visibility: hidden;
+  }
+
+  .hb-cal-day.friday {
+    background: #e5f0dd;
+  }
+
+  .hb-cal-day.sunday {
+    background: #f7e9e9;
+  }
+
+  .hb-cal-day.special-day {
+    background: #f8ecf1;
+  }
+
+  .hb-cal-day.anniversary {
+    background: #f4dee9;
+  }
+
+  .hb-cal-day.ord-day {
+    background: #e2edda;
+  }
+
+  .hb-cal-day.selected {
+    outline: 2px solid #839875;
+    outline-offset: -2px;
+  }
+
+  .hb-cal-day.today .hb-cal-num {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .hb-cal-num {
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .hb-cal-dot {
+    font-size: 0.8rem;
+    min-height: 17px;
+  }
+
+  .hb-cal-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.82rem;
+    color: #778571;
+    margin-top: 16px;
+  }
+
+  .hb-cal-aside h3 {
+    margin: 0 0 12px;
+    color: #4f5d42;
+    font-size: 1.06rem;
+  }
+
+  .hb-cal-selected {
+    padding: 15px;
+    background: #edf3e8;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    line-height: 1.7;
+  }
+
+  .hb-cal-events {
+    display: grid;
+    gap: 9px;
+    margin: 12px 0 22px;
+  }
+
+  .hb-cal-event {
+    background: white;
+    border: 1px solid #e0e8d9;
+    border-radius: 13px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .hb-cal-event.automatic {
+    background: #fdf7f9;
+    border-color: #f0e1e8;
+  }
+
+  .hb-cal-event button {
+    background: #f7e9e8;
+    color: #965f5c;
+    border: none;
+    border-radius: 9px;
+    padding: 7px 9px;
+    cursor: pointer;
+  }
+
+  .hb-cal-edit {
+    border-top: 1px solid #e0e8d9;
+    padding-top: 18px;
+  }
+
+  .hb-cal-edit label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin: 12px 0 7px;
+  }
+
+  .hb-cal-edit input,
+  .hb-cal-edit select {
+    display: block;
+    width: 100%;
+    background: white;
+    color: #394734;
+    border: 1px solid #d7e1cf;
+    border-radius: 12px;
+    padding: 12px;
+  }
+
+  .hb-cal-edit .hb-cal-action {
+    width: 100%;
+    margin-top: 15px;
+  }
+
+  .hb-cal-help {
+    color: #798676;
+    font-size: 0.83rem;
+    line-height: 1.6;
+    margin-top: 15px;
+  }
+
+  @media (max-width: 760px) {
+    .hb-cal { padding: 15px; }
+
+    .hb-cal-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .hb-cal-panel { padding: 12px; }
+
+    .hb-cal-day { min-height: 48px; }
+
+    .hb-cal-grid,
+    .hb-cal-week { gap: 2px; }
+
+    .hb-cal-dot { font-size: 0.7rem; }
+  }
+</style>
+
+<section class="card hb-cal" id="hbCalendarSection">
+
+  <h2>Our Little Bookout Calendar 📅💚</h2>
+
+  <p class="hb-cal-intro">
+    Every little day brings us closer together ♡
+  </p>
+
+  <div class="hb-cal-layout">
+
+    <div class="hb-cal-panel">
+
+      <div class="hb-cal-nav">
+        <button id="hbCalPrev" type="button">❮</button>
+        <strong id="hbCalMonth"></strong>
+        <button id="hbCalNext" type="button">❯</button>
+      </div>
+
+      <div class="hb-cal-week">
+        <span>Sun</span>
+        <span>Mon</span>
+        <span>Tue</span>
+        <span>Wed</span>
+        <span>Thu</span>
+        <span>Fri</span>
+        <span>Sat</span>
+      </div>
+
+      <div class="hb-cal-grid" id="hbCalGrid"></div>
+
+      <div class="hb-cal-legend">
+        <span>💚 Usual bookout</span>
+        <span>🌷 Usual book-in</span>
+        <span>💕 Monthsary</span>
+        <span>💍 Anniversary</span>
+        <span>🎂 Birthday</span>
+        <span>🪖 ORD</span>
+        <span>💌 Saved event</span>
+      </div>
+
+      <p class="hb-cal-help">
+        Fridays and Sundays are Heinbobo's usual
+        bookout routine, not confirmed dates.
+        Special relationship dates appear automatically.
+      </p>
+
+    </div>
+
+    <div class="hb-cal-panel hb-cal-aside">
+
+      <h3>Our chosen day ♡</h3>
+
+      <div class="hb-cal-selected" id="hbCalSelected">
+      </div>
+
+      <h3>Our little moments 💕</h3>
+
+      <div class="hb-cal-events" id="hbCalEvents">
+      </div>
+
+      <div class="hb-cal-edit">
+
+        <h3>➕ Add a special date</h3>
+
+        <label for="hbCalType">Type of event</label>
+
+        <select id="hbCalType">
+          <option value="date">💕 Our date</option>
+          <option value="bookout">🏠 Confirmed bookout</option>
+          <option value="bookin">🎒 Confirmed book-in</option>
+          <option value="special">💌 Special occasion</option>
+        </select>
+
+        <label for="hbCalNote">What's happening?</label>
+
+        <input
+          id="hbCalNote"
+          type="text"
+          maxlength="100"
+          placeholder="e.g. Movie date with bobo ♡"
+        >
+
+        <button
+          id="hbCalSave"
+          type="button"
+          class="hb-cal-action">
+          Save this date ♡
+        </button>
+
+      </div>
+
+      <p class="hb-cal-help">
+        Select any day on the calendar, add your
+        little note, and save! No passcode needed.
+      </p>
+
+    </div>
+
+  </div>
+</section>
+
+<script>
+(() => {
+
+  const root = document.getElementById(
+    "hbCalendarSection"
+  );
+
+  if (!root) return;
+
+  const grid = root.querySelector("#hbCalGrid");
+  const monthLabel = root.querySelector("#hbCalMonth");
+  const selectedBox = root.querySelector("#hbCalSelected");
+  const eventsBox = root.querySelector("#hbCalEvents");
+  const typeInput = root.querySelector("#hbCalType");
+  const noteInput = root.querySelector("#hbCalNote");
+
+  const STORAGE_KEY = "heinbobo_calendar_events_v1";
+
+  const today = new Date();
+
+  let shown = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    1
+  );
+
+  let selected = dateKey(today);
+  let events = [];
+
+  const icons = {
+    date: "💕",
+    bookout: "🏠",
+    bookin: "🎒",
+    special: "💌"
+  };
+
+  // DATE HELPERS
+
+  function dateKey(date) {
+    return [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, "0"),
+      String(date.getDate()).padStart(2, "0")
+    ].join("-");
+  }
+
+  function parseDate(key) {
+    const [y, m, d] = key.split("-").map(Number);
+    return new Date(y, m - 1, d);
+  }
+
+  function prettyDate(key) {
+    return parseDate(key).toLocaleDateString(
+      "en-SG",
+      {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }
+    );
+  }
+
+  // AUTOMATIC RELATIONSHIP EVENTS
+
+  function automaticEvents(key) {
+
+    const date = parseDate(key);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    const result = [];
+
+    // 9th of every month
+    // Special anniversary on 9 January 2028
+
+    if (day === 9) {
+
+      if (year === 2028 && month === 1) {
+        result.push({
+          type: "anniversary",
+          label: "💍 Our 1st Anniversary!! ♡"
+        });
+      } else {
+        result.push({
+          type: "monthsary",
+          label: "💕 Ruienbobo & Heinbobo's Monthsary ♡"
+        });
+      }
+    }
+
+    // Heinbobo's birthday: 7 April every year
+
+    if (month === 4 && day === 7) {
+      result.push({
+        type: "birthday",
+        label: "🎂 Happy Birthday Heinbobo!! ♡"
+      });
+    }
+
+    // Ruienbobo's birthday: 15 September every year
+
+    if (month === 9 && day === 15) {
+      result.push({
+        type: "birthday",
+        label: "🎀 Happy Birthday Ruienbobo!! ♡"
+      });
+    }
+
+    // Heinbobo's expected ORD
+
+    if (key === "2028-05-11") {
+      result.push({
+        type: "ord",
+        label: "🪖 HEINBOBO ORD!!! YOU DID IT!! 💚"
+      });
+    }
+
+    return result;
+  }
+
+  // LOAD YOUR SAVED CUSTOM EVENTS
+
+  try {
+    const stored = JSON.parse(
+      localStorage.getItem(STORAGE_KEY) || "[]"
+    );
+
+    if (Array.isArray(stored)) {
+      events = stored.filter(event =>
+        event &&
+        typeof event.date === "string" &&
+        /^\d{4}-\d{2}-\d{2}$/.test(event.date) &&
+        typeof event.note === "string"
+      );
+    }
+  } catch (error) {
+    events = [];
+  }
+
+  function saveEvents() {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(events)
+      );
+      return true;
+    } catch (error) {
+      alert("Unable to save this event.");
+      return false;
+    }
+  }
+
+  // DRAW CALENDAR
+
+  function render() {
+
+    monthLabel.textContent =
+      shown.toLocaleDateString(
+        "en-SG",
+        {
+          month: "long",
+          year: "numeric"
+        }
+      );
+
+    grid.replaceChildren();
+
+    const year = shown.getFullYear();
+    const month = shown.getMonth();
+
+    const offset = new Date(
+      year, month, 1
+    ).getDay();
+
+    const days = new Date(
+      year, month + 1, 0
+    ).getDate();
+
+    const cells = Math.ceil(
+      (offset + days) / 7
+    ) * 7;
+
+    for (let i = 0; i < cells; i++) {
+
+      const day = i - offset + 1;
+
+      const button = document.createElement("button");
+
+      button.type = "button";
+      button.className = "hb-cal-day";
+
+      if (day < 1 || day > days) {
+        button.disabled = true;
+        grid.append(button);
+        continue;
+      }
+
+      const date = new Date(year, month, day);
+      const key = dateKey(date);
+
+      const automatic = automaticEvents(key);
+      const saved = events.filter(e => e.date === key);
+
+      if (date.getDay() === 5) {
+        button.classList.add("friday");
+      }
+
+      if (date.getDay() === 0) {
+        button.classList.add("sunday");
+      }
+
+      if (automatic.length) {
+        button.classList.add("special-day");
+      }
+
+      if (automatic.some(e => e.type === "anniversary")) {
+        button.classList.add("anniversary");
+      }
+
+      if (automatic.some(e => e.type === "ord")) {
+        button.classList.add("ord-day");
+      }
+
+      if (key === selected) {
+        button.classList.add("selected");
+      }
+
+      if (key === dateKey(today)) {
+        button.classList.add("today");
+      }
+
+      button.setAttribute("aria-label", prettyDate(key));
+
+      const number = document.createElement("span");
+      number.className = "hb-cal-num";
+      number.textContent = day;
+
+      const marker = document.createElement("span");
+      marker.className = "hb-cal-dot";
+
+      if (automatic.length) {
+
+        const type = automatic[0].type;
+
+        marker.textContent = {
+          monthsary: "💕",
+          anniversary: "💍",
+          birthday: "🎂",
+          ord: "🪖"
+        }[type];
+
+      } else if (saved.length) {
+
+        marker.textContent =
+          icons[saved[0].type] || "💌";
+
+      } else if (date.getDay() === 5) {
+
+        marker.textContent = "💚";
+
+      } else if (date.getDay() === 0) {
+
+        marker.textContent = "🌷";
+      }
+
+      button.append(number, marker);
+
+      button.addEventListener("click", () => {
+        selected = key;
+        render();
+      });
+
+      grid.append(button);
+    }
+
+    // SHOW SELECTED DAY
+
+    let description = "A day to remember ♡";
+
+    const selectedDate = parseDate(selected);
+
+    if (selectedDate.getDay() === 5) {
+      description = "Usual Friday bookout ♡";
+    } else if (selectedDate.getDay() === 0) {
+      description = "Usual Sunday book-in ♡";
+    }
+
+    selectedBox.textContent =
+      prettyDate(selected) + " · " + description;
+
+    eventsBox.replaceChildren();
+
+    // Show automatic events
+
+    const auto = automaticEvents(selected);
+
+    auto.forEach(event => {
+
+      const row = document.createElement("div");
+      row.className = "hb-cal-event automatic";
+
+      const label = document.createElement("span");
+      label.textContent = event.label;
+
+      row.append(label);
+      eventsBox.append(row);
+    });
+
+    // Show custom saved events
+
+    const custom = events
+      .map((event, index) => ({
+        ...event,
+        index
+      }))
+      .filter(event => event.date === selected);
+
+    custom.forEach(event => {
+
+      const row = document.createElement("div");
+      row.className = "hb-cal-event";
+
+      const label = document.createElement("span");
+
+      label.textContent =
+        (icons[event.type] || "💌") +
+        " " + event.note;
+
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.textContent = "Delete";
+
+      remove.addEventListener("click", () => {
+        events.splice(event.index, 1);
+        saveEvents();
+        render();
+      });
+
+      row.append(label, remove);
+      eventsBox.append(row);
+    });
+
+    if (!auto.length && !custom.length) {
+
+      const empty = document.createElement("p");
+      empty.className = "hb-cal-help";
+      empty.textContent =
+        "No saved moments for this day yet ♡";
+
+      eventsBox.append(empty);
+    }
+  }
+
+  // MONTH NAVIGATION
+
+  root.querySelector("#hbCalPrev")
+    .addEventListener("click", () => {
+
+      shown = new Date(
+        shown.getFullYear(),
+        shown.getMonth() - 1,
+        1
+      );
+
+      render();
+    });
+
+  root.querySelector("#hbCalNext")
+    .addEventListener("click", () => {
+
+      shown = new Date(
+        shown.getFullYear(),
+        shown.getMonth() + 1,
+        1
+      );
+
+      render();
+    });
+
+  // ADD A CUSTOM EVENT
+  // NO EDITING PASSCODE REQUIRED
+
+  root.querySelector("#hbCalSave")
+    .addEventListener("click", () => {
+
+      const note = noteInput.value.trim();
+      const type = typeInput.value;
+
+      if (!note) {
+        alert("Write a little note first ♡");
+        return;
+      }
+
+      events.push({
+        date: selected,
+        type: type,
+        note: note
+      });
+
+      if (!saveEvents()) {
+        events.pop();
+        return;
+      }
+
+      noteInput.value = "";
+
+      // Ask whether to update the main
+      // countdown when a bookout/book-in
+      // is confirmed.
+
+      if (type === "bookout" || type === "bookin") {
+
+        const update = confirm(
+          "Saved! ♡\n\nAlso update the homepage's next " +
+          type + " date to " + prettyDate(selected) + "?"
+        );
+
+        if (
+          update &&
+          typeof appData !== "undefined" &&
+          typeof saveData === "function"
+        ) {
+
+          const target = type === "bookout"
+            ? "nextBookout"
+            : "nextBookin";
+
+          appData[target] = selected +
+            (type === "bookout"
+              ? "T18:00:00"
+              : "T20:00:00");
+
+          saveData();
+
+          if (typeof updateStaticFields === "function") {
+            updateStaticFields();
+          }
+
+          if (typeof updateCountdowns === "function") {
+            updateCountdowns();
+          }
+        }
+      }
+
+      render();
+    });
+
+  // KEEP CALENDAR BELOW NS PROGRESS BAR
+
+  const progressCard = document.querySelector(
+    ".progress-card"
+  );
+
+  if (progressCard) {
+    progressCard.insertAdjacentElement(
+      "afterend",
+      root
+    );
+  }
+
+  render();
+
+})();
+</script>
+
+<!-- HEINBOBO BOOKOUT CALENDAR: END -->
+
+
+<!-- RUIENBOBO OPEN WHEN LETTERS: START -->
+
+<style>
+  .bobo-letters {
+    grid-column: 1 / -1;
+    padding: 30px 25px;
+    text-align: center;
+    margin-top: 0;
+  }
+
+  .bobo-letters h2 {
+    color: #4f5d42;
+    margin: 0 0 10px;
+  }
+
+  .bobo-letters-intro {
+    color: #7b8874;
+    line-height: 1.7;
+    margin: 0 auto 25px;
+    max-width: 550px;
+  }
+
+  .bobo-letter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 17px;
+  }
+
+  .bobo-letter-item {
+    border: 1px solid #e0e8d8;
+    background: #fbfcf9;
+    border-radius: 22px;
+    padding: 23px 12px;
+    min-height: 210px;
+    cursor: pointer;
+    color: #4f5d42;
+    font: inherit;
+    transition: transform 0.25s, box-shadow 0.25s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+  }
+
+  .bobo-letter-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(79, 93, 66, 0.12);
+  }
+
+  .bobo-letter-item:focus-visible {
+    outline: 3px solid #8a9d7b;
+    outline-offset: 3px;
+  }
+
+  .bobo-letter-envelope {
+    width: 105px;
+    height: 72px;
+    border-radius: 9px;
+    position: relative;
+    background: #e0ead8;
+    border: 2px solid #b6c8aa;
+    box-shadow: 0 6px 12px rgba(65, 80, 56, 0.08);
+    overflow: hidden;
+    transition: transform 0.25s;
+  }
+
+  .bobo-letter-item:hover .bobo-letter-envelope {
+    transform: rotate(-5deg) scale(1.08);
+  }
+
+  .bobo-letter-envelope::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-left: 51px solid transparent;
+    border-right: 51px solid transparent;
+    border-top: 39px solid #f6f9f2;
+  }
+
+  .bobo-letter-envelope::after {
+    content: "♡";
+    position: absolute;
+    left: 50%;
+    top: 30px;
+    transform: translateX(-50%);
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #8b9e7e;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+  }
+
+  .bobo-letter-item:nth-child(2) .bobo-letter-envelope,
+  .bobo-letter-item:nth-child(5) .bobo-letter-envelope {
+    background: #f0dce3;
+    border-color: #e5c5d0;
+  }
+
+  .bobo-letter-item:nth-child(3) .bobo-letter-envelope,
+  .bobo-letter-item:nth-child(6) .bobo-letter-envelope {
+    background: #eee5d5;
+    border-color: #decdb5;
+  }
+
+  .bobo-letter-title {
+    font-weight: 800;
+    font-size: 0.98rem;
+    line-height: 1.5;
+  }
+
+  .bobo-letter-subtitle {
+    font-size: 0.78rem;
+    color: #83907c;
+  }
+
+  /* Letter popup */
+  .bobo-letter-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    background: rgba(42, 54, 39, 0.60);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    overflow-y: auto;
+  }
+
+  .bobo-letter-overlay[hidden] {
+    display: none !important;
+  }
+
+  .bobo-letter-paper {
+    width: min(570px, 100%);
+    max-height: min(85vh, 850px);
+    overflow-y: auto;
+    background: #fffdf8;
+    border-radius: 25px;
+    padding: 32px;
+    box-shadow: 0 20px 60px rgba(25, 38, 22, 0.22);
+    border: 5px solid #e1e9d8;
+    position: relative;
+    animation: boboLetterOpen 0.35s ease;
+    text-align: left;
+  }
+
+  @keyframes boboLetterOpen {
+    from {
+      opacity: 0;
+      transform: translateY(25px) scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .bobo-letter-paper h2 {
+    text-align: center;
+    color: #4f5d42;
+    margin: 12px 0 20px;
+    font-size: 1.5rem;
+  }
+
+  .bobo-letter-decoration {
+    text-align: center;
+    font-size: 38px;
+  }
+
+  .bobo-letter-body {
+    color: #4d5945;
+    white-space: pre-wrap;
+    line-height: 2;
+    font-size: 1rem;
+    padding: 15px 5px;
+  }
+
+  .bobo-letter-close {
+    display: block;
+    margin: 20px auto 0;
+    background: #829575;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 13px 25px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .bobo-letter-close:hover {
+    background: #667b59;
+  }
+
+  @media (max-width: 700px) {
+    .bobo-letter-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .bobo-letters {
+      padding: 20px 13px;
+    }
+
+    .bobo-letter-item {
+      padding: 18px 7px;
+      min-height: 185px;
+    }
+
+    .bobo-letter-title {
+      font-size: 0.85rem;
+    }
+
+    .bobo-letter-envelope {
+      transform: scale(0.85);
+    }
+
+    .bobo-letter-paper {
+      padding: 22px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bobo-letter-paper {
+      animation: none;
+    }
+  }
+</style>
+
+<section class="card bobo-letters" id="boboLetters">
+
+  <h2>Letters From Ruienbobo 💌</h2>
+
+  <p class="bobo-letters-intro">
+    to my favourite soldier, heinbobo ♡
+
+    a little collection of letters for whenever
+    you need me, even when we're apart.
+    open one whenever you feel like it, okay?
+  </p>
+
+  <div class="bobo-letter-grid" id="boboLetterGrid">
+  </div>
+
+  <p class="tiny" style="margin-top:24px;">
+    made with lots and lots of love, from your ruienbobo 🐰💚
+  </p>
+
+</section>
+
+<!-- Letter popup -->
+<div class="bobo-letter-overlay"
+     id="boboLetterOverlay"
+     hidden>
+
+  <div class="bobo-letter-paper"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="boboLetterPopupTitle">
+
+    <div class="bobo-letter-decoration" id="boboLetterEmoji">
+      💌
+    </div>
+
+    <h2 id="boboLetterPopupTitle"></h2>
+
+    <div class="bobo-letter-body" id="boboLetterBody">
+    </div>
+
+    <button type="button"
+            class="bobo-letter-close"
+            id="boboLetterClose">
+      Close letter ♡
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+(() => {
+
+  // ==================================================
+  // CUSTOMISE YOUR LOVE LETTERS HERE!
+  //
+  // Change the text inside each `body` section.
+  // Keep the backticks surrounding each letter.
+  // ==================================================
+
+  const loveLetters = [
+
+    {
+      emoji: "🐰",
+      title: "Open when you miss me",
+      subtitle: "a little hug from ruienbobo ♡",
+
+      body: `hi heinbobo ♡
+
+if you're reading this, i guess you're missing me hehe.
+
+i wish i could teleport to you right now and give you the biggest hug ever.
+
+but until i can see you again, just imagine me hugging you super tightly okay?
+
+even when we're apart, you're always my favourite person.
+
+i miss you too bobo.
+
+love,
+your ruienbobo 🐰💚`
+    },
+
+    {
+      emoji: "🫂",
+      title: "Open when you're having a bad day",
+      subtitle: "it's okay to have difficult days",
+
+      body: `hi my love ♡
+
+i know today might not have been the best day.
+
+maybe things didn't go your way, or maybe you're just feeling tired of everything.
+
+but i hope you know that one difficult day doesn't change how proud i am of you.
+
+you don't always have to be strong.
+
+i'm always here if you need someone to talk to, complain to, or just sleep call with.
+
+i love you heinbobo.
+
+from your ruienbobo 💚`
+    },
+
+    {
+      emoji: "🪖",
+      title: "Open when NS is tiring",
+      subtitle: "for my favourite guardsman",
+
+      body: `hi heinbobo!!
+
+i know NS can be super tiring, especially with all the training and early mornings.
+
+but look how far you've already come!!
+
+you've finished BMT and now you're continuing your journey in Guards.
+
+i hope you give yourself credit for everything you've pushed through.
+
+and remember, every single day means you're another day closer to ORD!!
+
+i'm cheering for you always.
+
+love you bobo ♡`
+    },
+
+    {
+      emoji: "🌙",
+      title: "Open when you can't sleep",
+      subtitle: "sweet dreams, my love",
+
+      body: `hellooo sleepy bobo ♡
+
+why are you still awakeee!!
+
+if i was beside you right now, i'd cuddle up next to you and make sure you're comfy.
+
+imagine we're lying together under a big soft blanket.
+
+ruienbobo the rabbit is cuddling heinbobo the bear hehe.
+
+i hope tomorrow is a gentle day for you.
+
+close your eyes and get some rest okay?
+
+goodnight my love 🌙💚`
+    },
+
+    {
+      emoji: "💕",
+      title: "Open when you need some love",
+      subtitle: "just a little reminder",
+
+      body: `HI MY FAVOURITE BOBOOO!!
+
+this is your reminder that i love you!!
+
+i love spending time with you, making memories with you, and getting to call you mine.
+
+even when life gets busy, you're still someone so special to me.
+
+i hope this tiny letter makes you smile, even just a little.
+
+sending you 100000000 kisses hehe.
+
+mwah mwah mwah 💋
+
+love,
+ruienbobo ♡`
+    },
+
+    {
+      emoji: "🏠",
+      title: "Open when you're booking out",
+      subtitle: "YAYYY HEINBOBO IS COMING HOME",
+
+      body: `HEINBOBOOOOO!!
+
+ITS FINALLY BOOKOUT DAY!!!
+
+YOU SURVIVED ANOTHER WEEK!!
+
+i'm so excited that you finally get to rest and enjoy your weekend.
+
+i hope you get to eat yummy food, sleep comfortably, and do all the things you've been looking forward to.
+
+and of course, i can't wait to see you!!
+
+welcome home my favourite soldier.
+
+your ruienbobo is waiting for you 🐰💚`
+    }
+
+  ];
+
+  // ==================================================
+  // WEBSITE FUNCTIONALITY
+  // No need to edit anything below this line.
+  // ==================================================
+
+  const grid = document.getElementById("boboLetterGrid");
+  const overlay = document.getElementById("boboLetterOverlay");
+  const title = document.getElementById("boboLetterPopupTitle");
+  const body = document.getElementById("boboLetterBody");
+  const emoji = document.getElementById("boboLetterEmoji");
+  const closeButton = document.getElementById("boboLetterClose");
+
+  let previousFocus = null;
+
+  function openLetter(index) {
+
+    const letter = loveLetters[index];
+
+    if (!letter) return;
+
+    previousFocus = document.activeElement;
+
+    title.textContent = letter.title;
+    body.textContent = letter.body;
+    emoji.textContent = letter.emoji;
+
+    overlay.hidden = false;
+    document.body.style.overflow = "hidden";
+
+    closeButton.focus();
+  }
+
+  function closeLetter() {
+
+    overlay.hidden = true;
+    document.body.style.overflow = "";
+
+    if (previousFocus && previousFocus.focus) {
+      previousFocus.focus();
+    }
+  }
+
+  // Create the six envelope buttons
+
+  loveLetters.forEach((letter, index) => {
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "bobo-letter-item";
+
+    const envelope = document.createElement("span");
+    envelope.className = "bobo-letter-envelope";
+    envelope.setAttribute("aria-hidden", "true");
+
+    const name = document.createElement("span");
+    name.className = "bobo-letter-title";
+    name.textContent = letter.emoji + " " + letter.title;
+
+    const subtitle = document.createElement("span");
+    subtitle.className = "bobo-letter-subtitle";
+    subtitle.textContent = letter.subtitle;
+
+    button.append(envelope, name, subtitle);
+
+    button.addEventListener("click", () => {
+      openLetter(index);
+    });
+
+    grid.appendChild(button);
+  });
+
+  closeButton.addEventListener("click", closeLetter);
+
+  overlay.addEventListener("click", event => {
+    if (event.target === overlay) {
+      closeLetter();
+    }
+  });
+
+  document.addEventListener("keydown", event => {
+
+    if (overlay.hidden) return;
+
+    if (event.key === "Escape") {
+      closeLetter();
+    }
+
+    // Keep keyboard focus inside the open letter.
+    if (event.key === "Tab") {
+      event.preventDefault();
+      closeButton.focus();
+    }
+  });
+
+  // Place letters immediately after the calendar.
+
+  const calendar = document.getElementById(
+    "hbCalendarSection"
+  );
+
+  const letters = document.getElementById(
+    "boboLetters"
+  );
+
+  if (calendar && letters) {
+    calendar.insertAdjacentElement(
+      "afterend",
+      letters
+    );
+  }
+
+})();
+</script>
+
+<!-- RUIENBOBO OPEN WHEN LETTERS: END -->
+
+<!-- FIX SURPRISE LETTER ON MOBILE -->
+<style>
+  @media (max-width: 600px) {
+    .reveal-overlay {
+      display: block;
+      overflow-y: auto;
+      height: 100dvh;
+      padding: 15px;
+      align-items: unset;
+      justify-content: unset;
+      -webkit-overflow-scrolling: touch;
+    }
+  
+    .reveal-card {
+      margin: 0 auto 25px;
+      width: 100%;
+      max-width: 100%;
+      border-radius: 22px;
+    }
+  
+    .reveal-top {
+      padding: 18px 15px;
+    }
+  
+    .reveal-content {
+      padding: 16px;
+    }
+  
+    .reveal-letter {
+      font-size: 14px;
+      line-height: 1.6;
+      padding: 14px;
+    }
+  
+    .reveal-content .btn-row {
+      padding-bottom: 10px;
+    }
+  
+    .reveal-content .btn {
+      width: 100%;
+      white-space: normal;
+    }
+  }
+  </style>
+  <!-- END MOBILE FIX -->
+
+<!-- MOBILE HOMEPAGE REORDER: START -->
+
+<script>
+  (function () {
+    const hero = document.querySelector(".hero");
+    const heroMain = document.querySelector(".hero-main");
+    const heroSide = document.querySelector(".hero-side");
+    const countdownGrid = document.querySelector(".grid.section");
+    const progressCard = document.querySelector(".progress-card");
+  
+    if (!hero || !heroMain || !heroSide || !countdownGrid || !progressCard) {
+      return;
+    }
+  
+    // Remember original locations so desktop stays unchanged.
+    const countdownMarker = document.createComment(
+      "Original countdown location"
+    );
+  
+    countdownGrid.parentNode.insertBefore(
+      countdownMarker,
+      countdownGrid
+    );
+  
+    const sideMarker = document.createComment(
+      "Original mascot location"
+    );
+  
+    heroSide.parentNode.insertBefore(sideMarker, heroSide);
+  
+    const mobile = window.matchMedia("(max-width: 900px)");
+  
+    function arrangeHomepage() {
+      if (mobile.matches) {
+        // Title first, countdowns next, mascots afterward.
+        heroMain.insertAdjacentElement("afterend", countdownGrid);
+        progressCard.insertAdjacentElement("afterend", heroSide);
+      } else {
+        // Restore desktop arrangement.
+        countdownMarker.parentNode.insertBefore(
+          countdownGrid,
+          countdownMarker.nextSibling
+        );
+  
+        sideMarker.parentNode.insertBefore(
+          heroSide,
+          sideMarker.nextSibling
+        );
+      }
+    }
+  
+    arrangeHomepage();
+  
+    mobile.addEventListener("change", arrangeHomepage);
+  })();
+  </script>
+  
+  <!-- MOBILE HOMEPAGE REORDER: END -->
+  
+<!-- CORRECT MOBILE LAYOUT: START -->
+
+<style>
+  @media (max-width: 900px) {
+  
+    .container {
+      width: 94%;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+  
+    .hero {
+      display: flex !important;
+      flex-direction: column !important;
+      width: 100%;
+      min-width: 0;
+    }
+  
+    .hero-main,
+    .hero-side {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+    }
+  
+    .grid.section {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) !important;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      margin-top: 18px;
+    }
+  
+    .grid.section > * {
+      grid-column: 1 / -1 !important;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+    }
+  
+    .hero h1 {
+      overflow-wrap: break-word;
+    }
+  
+    .mascot-wrap {
+      max-width: 100%;
+    }
+  
+    .hb-cal,
+    .bobo-letters,
+    .letter-card,
+    .bookout-card,
+    .memory-card {
+      min-width: 0;
+      max-width: 100%;
+    }
+  }
+  </style>
+  
+  <script>
+  (function () {
+    const hero = document.querySelector(".hero");
+    const heroMain = document.querySelector(".hero-main");
+    const heroSide = document.querySelector(".hero-side");
+  
+    const grid = document.querySelector(".grid.section");
+  
+    if (!hero || !heroMain || !heroSide || !grid) {
+      return;
+    }
+  
+    // Save original positions for desktop.
+    const heroMarker = document.createComment("Mascot original location");
+    heroSide.parentNode.insertBefore(heroMarker, heroSide);
+  
+    const countdownMarker = document.createComment("Countdown original location");
+    grid.parentNode.insertBefore(countdownMarker, grid);
+  
+    const mobile = window.matchMedia("(max-width: 900px)");
+  
+    function arrange() {
+  
+      if (mobile.matches) {
+  
+        // Move only the countdown cards into their
+        // own section below the homepage title.
+  
+        heroMain.insertAdjacentElement("afterend", grid);
+  
+        // Place mascots after the countdown section.
+        grid.insertAdjacentElement("afterend", heroSide);
+  
+        // Explicitly order the contents of the grid.
+        const order = [
+          ".count-card:nth-of-type(1)",
+          ".count-card:nth-of-type(2)",
+          ".count-card:nth-of-type(3)",
+          ".progress-card",
+          "#hbCalendarSection",
+          "#boboLetters",
+          ".letter-card",
+          ".bookout-card",
+          ".memory-card"
+        ];
+  
+        const elements = order
+          .map(selector => grid.querySelector(selector))
+          .filter(Boolean);
+  
+        elements.forEach(element => grid.appendChild(element));
+  
+      } else {
+  
+        // Restore the desktop structure.
+        countdownMarker.parentNode.insertBefore(
+          grid,
+          countdownMarker.nextSibling
+        );
+  
+        heroMarker.parentNode.insertBefore(
+          heroSide,
+          heroMarker.nextSibling
+        );
+      }
+    }
+  
+    arrange();
+    mobile.addEventListener("change", arrange);
+  })();
+  </script>
+  
+  <!-- CORRECT MOBILE LAYOUT: END -->
+  
+  
+<body>
+</html>
